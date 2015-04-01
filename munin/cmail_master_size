@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title cmail Master Database Size'
+	echo 'graph_args -l 0'
+	echo 'graph_vlabel File Size'
+	echo 'graph_category cmail'
+	echo 'graph_info File size of master database'
+	echo 'dbsize.label File size'
+	echo 'dbsize.info File size'
+	exit 0
+fi
+
+printf "dbsize.value %s\n" "`stat -c%s $DATABASE`"
