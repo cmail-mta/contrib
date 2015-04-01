@@ -1,0 +1,7 @@
+if [ -z $1 ]; then
+	printf "Usage: %s <dbfile>\n" "$0"
+	exit 0
+fi
+
+sqlite3 -csv "$1" "SELECT mail_user, COUNT(*), SUM(LENGTH(mail_data)) AS data FROM mailbox GROUP BY mail_user ORDER BY data DESC;" | while IFS=, read user mails data; do printf "User %s has %s mails totaling %s bytes\n" "$user" "$mails" "$data"; 
+done
