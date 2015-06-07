@@ -1,6 +1,5 @@
 %title: cmail
-%author: cbdev
-%date: 2015-06-06
+%shouts: Shouts to #kitinfo
 
 # Project
 cmail-mta, Mail processing suite with SQLite backend
@@ -15,7 +14,6 @@ cbdev on freenode, hackint, quakenet
 >dev.cbcdn.com | cb@cbcdn.com
 
 
-*Shouts to #kitinfo*
 
 -------------------------------------------------
 # Underserved use-case
