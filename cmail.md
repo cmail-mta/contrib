@@ -110,6 +110,9 @@ cbdev on freenode, hackint, quakenet
 -------------------------------------------------
 # Cool stuff
 
+\* Address regexes
+\* Flexible routing system
+\* (Planned) Plugin API
 \* Web Panel
 \* User databases
 
