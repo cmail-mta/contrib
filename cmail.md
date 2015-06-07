@@ -95,7 +95,7 @@ cbdev on freenode, hackint, quakenet
 
 
 -------------------------------------------------
-#Runtime Administration
+# Runtime Administration
 
 \* cmail-admin: Command-line tool
 \* SQLite database editors: Choose your own
@@ -103,6 +103,8 @@ cbdev on freenode, hackint, quakenet
  \* Accesses cmail-api
  \* Includes interfaces for all modules
  \* Intuitive interface for live configuration
+ \* Allows delegation of privileges to users
+  \* Users can administer their own domains!
  \* Includes simulated routing test
 
 -------------------------------------------------
