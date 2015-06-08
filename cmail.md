@@ -123,7 +123,7 @@ cbdev on freenode, hackint, quakenet
 \* ~10 active instances
 \* Maildrops up to 4000 mails
 \* LKML for testing ;)
-\* Pretty realiable so far
+\* Pretty reliable so far
 
 -------------------------------------------------
 # How can you help
