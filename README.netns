@@ -1,0 +1,78 @@
+In case you want cmail to use only a specific IP address for outgoing connections,
+network namespaces are a rather simple way to do this.
+
+You probably want this reboot safe.
+I recommend setting this up via your systems network config.
+There is an example config for Debian below.
+
+1) Setting up the namespace
+
+The manual steps:
+
+Add a new bridge.
+# ip link add br0 type bridge
+
+Add your public interface to the bridge.
+!!! WARNING! Doing this will probably break your network connection! !!!
+Make sure you still have access to the system via a different interface.
+# ip link set dev eth0 master br0
+
+Assign an IP to the public interface. (e.g. via DHCP)
+# dhclient br0
+
+Setup a network namespace for cmail.
+# ip netns add cmail-ns
+
+Add a pair of virtual ethernet interfaces.
+# ip link add veth0 type veth peer name veth1
+
+Add one end to the bridge.
+# ip link set dev veth0 master br0
+
+Add the other end to the network namespace.
+# ip link set dev veth1 netns cmail-ns
+
+Bring both interfaces up.
+# ip link set dev veth0 up
+# ip netns exec cmail-ns ip link set dev veth1 up
+
+Add an IP address to the interface in the new namespace.
+# ip netns exec cmail-ns ip address add 198.51.100.15/24 dev veth1
+
+Add a route to the namespace.
+# ip netns exec cmail-ns ip route add default via 198.51.100.1 dev veth1
+
+
+### Example interfaces(5) config for Debian.
+
+auto br0
+iface br0 inet dhcp
+	bridge_ports eth0
+	bridge_stp off
+	bridge_waitport 0
+	bridge_fd 0
+
+auto veth0
+iface veth0 inet manual
+	pre-up ip netns add cmail-ns
+	pre-up ip link add veth0 type veth peer name veth1
+	pre-up ip link set dev veth0 master br0
+	pre-up ip link set dev veth1 netns cmail-ns
+	up ip link set dev veth0 up
+	up ip netns exec cmail-ns ip link set dev veth1 up
+	post-up ip netns exec cmail-ns ip address add 198.51.100.15/24 dev veth1
+	post-up ip netns exec cmail-ns ip route add default via 198.51.100.1 dev veth1
+
+	pre-down ip netns exec cmail-ns ip link set dev veth1 down
+	down ip link set dev veth0 down
+	post-down ip link del veth0
+	post-down ip netns del cmail-ns
+
+
+2) Run cmail in the namespace
+
+The last step is to run the cmail instances in the new namespace.
+
+# ip netns exec cmail-ns /usr/sbin/cmail-msa /etc/cmail/msa.conf
+# ip netns exec cmail-ns /usr/sbin/cmail-mta /etc/cmail/mta.conf
+# ip netns exec cmail-ns /usr/sbin/cmail-popd /etc/cmail/popd.conf
