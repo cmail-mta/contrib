@@ -5,7 +5,7 @@ import subprocess
 MAILMAN = "/var/lib/mailman/mail/mailman"
 DATABASE = "/etc/cmail/databases/master.db3"
 USER = 'mailman'
-LISTS = [ "devel" ]
+LISTS = [ "devel", "security", "announce" ]
 
 handlers = {    "":"post", 
                 "-admin":"admin", 
@@ -37,6 +37,9 @@ def handle(cursor, mail):
 
     #get handler
     info = handler(data[0])
+    if info is None:
+        print("Failed to handle mail for ", data[0])
+        return
     
     #post mail
     if info[1] is not None:
